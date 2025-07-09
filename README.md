@@ -207,13 +207,13 @@ fn boxed_value() -> Box<i32> {
 
 -   The `Heap` is another abstraction that, unlike `Stack`, has a **flexible size** that can change over time (like in **runtime**).
 -   Instead of one `Stack Frame` for each thread the `Heap` memory region has a large **shared memory with the `Stack` memory region**.
--   The `Heap` memory **towards higher memory addresses (or upwards)** starting from the [lower address](#low-memory-address).
+-   The `Heap` memory grows **towards higher memory addresses (or upwards)** starting from the [lower address](#low-memory-address).
 -   While the program is running the `Heap` memory region **grows automatically** if the allocated memory is not enough and **shrinks if dropped** (calling the `drop()` method early or when the function ends).
     > To optimize the amount of system calls to a minimum you can try to allocate all the memory at once in one `Vec` with enough capacity **if you know how much memory your program needs beforehand**.
 -   The `Heap` is **not stored** inside the binary and is discarded after the program execution.
 -   Its size limit is bounded by the system's memory.
 -   Each `Heap` **value size** is determined by the **data type**.
--   Because of its **dynanmic** nature it needs to make system calls to ask for more space (using the **GlobalAlloc Trait that calls C's `malloc`**) as soon as requested thus adding a little overhead. This process is done in **chunks to make as few system calls as possible**. Even using this technique this process turns the `Heap` slower than the `Stack` memory.
+-   Because of its **dynamic** nature it needs to make system calls to ask for more space (using the **GlobalAlloc Trait that calls C's `malloc`**) as soon as requested thus adding a little overhead. This process is done in **chunks to make as few system calls as possible**. Even using this technique this process turns the `Heap` slower than the `Stack` memory.
 -   When a variable goes out of scope (**dropped**) the memory is **freed but not returned immediately to the OS**. The memory allocator keeps track of the **OS memory pages** to know which pages are **free** and which are **allocated**. This process is a way to **prevent more system calls** and **reuse** the available memory without waiting for the OS thus speeding things up.
 -   The access to the `Heap` is also slower than on the `Stack` because we have the additional step of **following a pointer** to the value.
 
@@ -328,7 +328,7 @@ std::sync::Once         ⮑ static START: Once = Once::new();
 ## [`char`](#char)
 * The size of a `char` in `Rust` depends on the platform it is run on. On most platforms, it is **4 bytes**, but on some platforms it can be **2 bytes or even 1 byte**.
 ## [`Tuple`](#tuple)
-* Tuple types can store multiple values of different types in memory. The size of the tuple is equal to the sum of the sizes of its components, **rounded up to the nearest multiple of the largest alignment** of its components. The remaining space in a tuple **may or may not be filled with padding**, depending on the platform and the components of the tuple.space (use the `std::mem::size_of::<T>()` and `std::mem::align_of::<T>()` to check the size and alignment of types).
+* Tuple types can store multiple values of different types in memory. The size of the tuple is equal to the sum of the sizes of its components, **rounded up to the nearest multiple of the largest alignment** of its components. The remaining space in a tuple **may or may not be filled with padding**, depending on the platform and the components of the tuple. (use the `std::mem::size_of::<T>()` and `std::mem::align_of::<T>()` to check the size and alignment of types).
 ## [`Array`](#array)
 * **Arrays** in `Rust` have a **known fixed size**. They can store multiple values of the same type in memory.
 ## [`Floating point`](#floating-point)
